@@ -43,17 +43,18 @@ class Board extends React.Component {
     super(props);
     this.state = {
       squares: Array(9).fill(null),
+      xIsNext: true,
     };
   };
-
-
-
   //now the state is stored in the Board component instead of the individual Square components.  
 
   handleClick(i) {
     const squares = this.state.squares.slice();
-    squares[i] = 'X';
-    this.setState({ squares: squares });
+    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    this.setState({
+      squares: squares,
+      xIsNext: !this.state.xIsNext
+    });
   }
 
   renderSquare(i) {
@@ -71,9 +72,9 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = 'Next player:';
-    const statusWinner = 'X';
-
+    const status = 'Next Player:';
+    // change the “statusWinner” text in Board’s render so that it displays which player has the next turn:
+    const statusWinner = (this.state.xIsNext ? 'X' : 'O');
 
     return (
       <div>
