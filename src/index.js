@@ -43,6 +43,7 @@ class Board extends React.Component {
     super(props);
     this.state = {
       squares: Array(9).fill(null),
+      // Taking turns
       xIsNext: true,
     };
   };
@@ -50,6 +51,7 @@ class Board extends React.Component {
 
   handleClick(i) {
     const squares = this.state.squares.slice();
+    // change the “statusWinner” text in Board’s render so that it displays which player has the next turn:
     squares[i] = this.state.xIsNext ? 'X' : 'O';
     this.setState({
       squares: squares,
@@ -72,15 +74,23 @@ class Board extends React.Component {
   }
 
   render() {
-    const status = 'Next Player:';
-    // change the “statusWinner” text in Board’s render so that it displays which player has the next turn:
-    const statusWinner = (this.state.xIsNext ? 'X' : 'O');
+    const status = 'Next Player: ';
+    let displayWinner = '';
+    const winner = calculateWinner(this.state.squares);
+    let statusWinner;
+    if (winner) {
+      displayWinner = 'Winner: ' + winner;
+    } else {
+      statusWinner = (this.state.xIsNext ? 'X' : 'O');
+    }
+
 
     return (
       <div>
         <div className="status">
           {status} <span className="statusWinner">{statusWinner}</span>
         </div>
+        <div className='displayWinner'>{displayWinner}</div>
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
@@ -122,3 +132,23 @@ class Game extends React.Component {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<Game />);
 
+// Helper function for declaring a winner
+function calculateWinner(squares) {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
+}
